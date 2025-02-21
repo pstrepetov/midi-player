@@ -5,6 +5,7 @@ import os
 import base64
 from .stylers import basic, cifka_advanced
 from functools import partial
+import symusic
 
 class MIDIPlayer:
     """
@@ -40,11 +41,17 @@ class MIDIPlayer:
             </iframe>'''
 
     def to_player_html(self, url_or_file, styler=basic):
-        if os.path.isfile(url_or_file): # if url_or_file points to local file, convert file to data url
+        if isinstance(url_or_file, symusic.Score): # if url_or_file is a symusic.Score object, convert it to data url
+            self.url = self.score_to_url(url_or_file)
+        elif os.path.isfile(url_or_file): # if url_or_file points to local file, convert file to data url
             self.url = self.to_data_url(url_or_file)
         else: 
             self.url = url_or_file
         return styler(self.url, viz_type=self.viz_type, dl=self.dl, title=self.title)
+
+    def score_to_url(self, score):
+        encoded_string = base64.b64encode(score.dumps_midi())
+        return 'data:audio/midi;base64,'+encoded_string.decode('utf-8')
 
     def to_data_url(self, midi_filename):  # this is crucial for Colab/WandB support
         with open(midi_filename, "rb") as f:
