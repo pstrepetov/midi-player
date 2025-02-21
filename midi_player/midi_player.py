@@ -10,12 +10,12 @@ import symusic
 class MIDIPlayer:
     """
     Jupyter-displayable MIDI player that also works on Colab, WandB.
-    Supports local MIDI file and/or web-hosted MIDI file via url
+    Supports local MIDI file and/or web-hosted MIDI file via url and symusic.Score objects
     From some original code from Tony Hirsh: https://blog.ouseful.info/2021/11/24/fragment-embedding-srcdoc-iframes-in-jupyter-notebooks/
     Modified by Scott H. Hawley @drscotthawley
     """
     def __init__(self,
-        url_or_file,            # url or local filename
+        url_or_file,            # url or local filename or symusic.Score object
         height,                 # Required arg because reasons
         width='100%',
         styler=basic,           # optional callback for generating player HTML
